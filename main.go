@@ -87,7 +87,7 @@ func HandleIPInfo(c *gin.Context) {
 	city, err := db.City(ip)
 	if err != nil {
 		c.JSON(200, gin.H{
-			"success": "false",
+			"success": false,
 			"reason":  ipStr + " is a invalid ip",
 		})
 		return
@@ -124,7 +124,7 @@ func Success(c *gin.Context, ipInfo *IPInfo, format string) {
 			area = append(area, ipInfo.City)
 		}
 		c.JSON(200, gin.H{
-			"success": "true",
+			"success": true,
 			"ip_info": struct {
 				IP   string `json:"ip"`
 				Area string `json:"area"`
@@ -135,7 +135,7 @@ func Success(c *gin.Context, ipInfo *IPInfo, format string) {
 		})
 	} else {
 		c.JSON(200, gin.H{
-			"success": "true",
+			"success": true,
 			"ip_info": ipInfo,
 		})
 	}
