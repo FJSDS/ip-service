@@ -7,7 +7,9 @@ go get -u github.com/FJSDS/ip-service
 ```
 
 ## 使用说明
-目前只有一个http接口 **"/"** 返回json结构体，可选query参数language=[cn,en],默认cn
+目前只有一个http接口  __"/"__ 返回json结构体，可选query参数
+- language=[cn,en],默认cn,
+- format=[json,string],默认json
 ### 成功返回如下结构体
 ```golang
 {
@@ -48,6 +50,22 @@ http://ip:25000/?language=cn
       "metro_code": 0,
       "time_zone": "Asia/Shanghai"
     }
+  },
+  "success": "true"
+}
+```
+
+**request:**
+```
+http://ip:25000/?format=string
+http://ip:25000/?language=cn&format=string
+```
+**response**
+```json
+{
+  "ip_info": {
+    "ip": "118.113.146.10",
+    "area": "中国 四川省 成都"
   },
   "success": "true"
 }
