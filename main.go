@@ -2,6 +2,7 @@ package main
 
 import (
 	"net"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -70,16 +71,17 @@ func HandleIPInfo(c *gin.Context) {
 	if language == "cn" {
 		language = "zh-CN"
 	}
+	format := c.Query("format")
+	if format != "json" && format != "string" {
+		format = "json"
+	}
 	ipStr := c.ClientIP()
 	ip := net.ParseIP(ipStr)
 	if !IsPublicIP(ip) {
-		c.JSON(200, gin.H{
-			"success": "true",
-			"ip_info": &IPInfo{
-				IP:   ip.String(),
-				City: localNetworkNames[language],
-			},
-		})
+		Success(c, &IPInfo{
+			IP:   ip.String(),
+			City: localNetworkNames[language],
+		}, format)
 		return
 	}
 	city, err := db.City(ip)
@@ -106,9 +108,35 @@ func HandleIPInfo(c *gin.Context) {
 	ipInfo.Location.Longitude = city.Location.Longitude
 	ipInfo.Location.MetroCode = city.Location.MetroCode
 	ipInfo.Location.TimeZone = city.Location.TimeZone
+	Success(c, ipInfo, format)
+}
 
-	c.JSON(200, gin.H{
-		"success": "true",
-		"ip_info": ipInfo,
-	})
+func Success(c *gin.Context, ipInfo *IPInfo, format string) {
+	if format == "string" {
+		var area []string
+		if ipInfo.Country != "" {
+			area = append(area, ipInfo.Country)
+		}
+		if ipInfo.Province != "" {
+			area = append(area, ipInfo.Province)
+		}
+		if ipInfo.City != "" {
+			area = append(area, ipInfo.City)
+		}
+		c.JSON(200, gin.H{
+			"success": "true",
+			"ip_info": struct {
+				IP   string `json:"ip"`
+				Area string `json:"area"`
+			}{
+				IP:   ipInfo.IP,
+				Area: strings.Join(area, " "),
+			},
+		})
+	} else {
+		c.JSON(200, gin.H{
+			"success": "true",
+			"ip_info": ipInfo,
+		})
+	}
 }
