@@ -1,5 +1,5 @@
 # ip-service
-提供ip地址查询
+提供ip地址地理位置查询
 
 ## 初始化
 ```golang
