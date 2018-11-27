@@ -63,11 +63,8 @@ func IsPublicIP(IP net.IP) bool {
 }
 
 func HandleIPInfo(c *gin.Context) {
-
-	language := c.Param("language")
-	switch language {
-	case "cn", "en":
-	default:
+	language := c.Query("language")
+	if language != "cn" && language != "en" {
 		language = "cn"
 	}
 	if language == "cn" {
