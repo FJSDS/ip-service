@@ -94,7 +94,6 @@ func HandleIPInfo(c *gin.Context) {
 	}
 	ipInfo := &IPInfo{}
 	ipInfo.IP = ip.String()
-	ip.IsLoopback()
 	ipInfo.Country = city.Country.Names[language]
 	if len(city.Subdivisions) > 0 {
 		ipInfo.Province = city.Subdivisions[0].Names[language]
