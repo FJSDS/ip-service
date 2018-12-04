@@ -113,15 +113,20 @@ func HandleIPInfo(c *gin.Context) {
 func Success(c *gin.Context, ipInfo *IPInfo, format string) {
 	if format == "string" {
 		var area []string
-		if ipInfo.Country != "" {
-			area = append(area, ipInfo.Country)
-		}
-		if ipInfo.Province != "" {
-			area = append(area, ipInfo.Province)
-		}
-		if ipInfo.City != "" {
-			area = append(area, ipInfo.City)
-		}
+		//不判空，未以后split做准备
+		//if ipInfo.Country != "" {
+		//	area = append(area, ipInfo.Country)
+		//}
+		//if ipInfo.Province != "" {
+		//	area = append(area, ipInfo.Province)
+		//}
+		//if ipInfo.City != "" {
+		//	area = append(area, ipInfo.City)
+		//}
+		area = append(area, ipInfo.Country)
+		area = append(area, ipInfo.Province)
+		area = append(area, ipInfo.City)
+
 		c.JSON(200, gin.H{
 			"success": true,
 			"ip_info": struct {
