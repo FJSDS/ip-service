@@ -1,6 +1,8 @@
 package main
 
 import (
+	"embed"
+	"io/ioutil"
 	"net"
 	"strings"
 
@@ -29,9 +31,20 @@ var localNetworkNames = map[string]string{
 	"en":    "local network",
 }
 
+//go:embed GeoLite2-City.mmdb
+var mmdb embed.FS
+
 func init() {
 	var err error
-	db, err = geoip2.Open("GeoLite2-City.mmdb")
+	fs,err:=mmdb.Open("GeoLite2-City.mmdb")
+	if err!=nil{
+		panic(err)
+	}
+	data,err:=ioutil.ReadAll(fs)
+	if err!=nil{
+		panic(err)
+	}
+	db, err = geoip2.FromBytes(data)
 	if err != nil {
 		panic(err)
 	}
